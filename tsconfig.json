@@ -1,4 +1,26 @@
 {
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@appTypes/*": ["src/types/*"],
+      "@assets/*": ["src/assets/*"],
+      "@components/*": ["src/components/*"],
+      "@config/*": ["src/config/*"],
+      "@constants/*": ["src/constants/*"],
+      "@contexts/*": ["src/contexts/*"],
+      "@enums/*": ["src/enums/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@mocks/*": ["src/mocks/*"],
+      "@pages/*": ["src/pages/*"],
+      "@public/*": ["./public/*"],
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"]
+    },
+    // "skipLibCheck": true,
+    "sourceMap": true
+  },
+
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },
