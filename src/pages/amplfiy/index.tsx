@@ -1,15 +1,20 @@
 import {
-  useAuthenticator,
   View,
-  Button,
-  Authenticator,
-  useTheme,
   Image,
+  useTheme,
   Text,
   Heading,
+  Button,
+  useAuthenticator,
+  Authenticator,
+  AuthenticatorProps,
 } from "@aws-amplify/ui-react";
+import { Amplify } from "aws-amplify";
+import awsConfig from "../../aws-exports";
 
-const components = {
+Amplify.configure(awsConfig);
+
+const components: AuthenticatorProps["components"] = {
   Header() {
     const { tokens } = useTheme();
 
@@ -37,16 +42,7 @@ const components = {
 
   SignIn: {
     Header() {
-      const { tokens } = useTheme();
-
-      return (
-        <Heading
-          padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
-          level={3}
-        >
-          Sign in to your account
-        </Heading>
-      );
+      return <h1 className="font-bold">SignIn Heading</h1>;
     },
     Footer() {
       const { toForgotPassword } = useAuthenticator();
@@ -178,7 +174,7 @@ const components = {
   },
 };
 
-const formFields = {
+const formFields: AuthenticatorProps["formFields"] = {
   signIn: {
     username: {
       placeholder: "Enter your email",
@@ -236,17 +232,10 @@ const formFields = {
   },
 };
 
-export default function Cognito(params) {
-  // const { toSignIn } = useAuthenticator();
-
+export default function Cognito() {
   return (
-    <Authenticator>
-      {({ signOut, user }) => (
-        <main>
-          <h1>Hello {user.username}</h1>
-          <button onClick={signOut}>Sign out</button>
-        </main>
-      )}
+    <Authenticator formFields={formFields} components={components} hideSignUp>
+      {({ signOut }) => <button onClick={signOut}>Sign out</button>}
     </Authenticator>
   );
 }
