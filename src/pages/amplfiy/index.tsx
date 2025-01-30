@@ -8,87 +8,90 @@ import {
   useAuthenticator,
   Authenticator,
   AuthenticatorProps,
+  withAuthenticator,
 } from "@aws-amplify/ui-react";
+import { I18n } from 'aws-amplify/utils';
 import { Amplify } from "aws-amplify";
 import awsConfig from "../../aws-exports";
 
 Amplify.configure(awsConfig);
+// I18n.putVocabulariesForLanguage('en', {
+//   'Sign In': 'Login', // Tab header
+//   'Sign in': 'Log in', // Button label
+//   'Sign in to your account': 'Welcome Back!',
+//   Username: 'Enter your username', // Username label
+//   Password: 'Enter your password', // Password label
+//   'Forgot your password?': 'Reset Password',
+// });
+
 
 const components: AuthenticatorProps["components"] = {
   Header() {
-    const { tokens } = useTheme();
-
-    return (
-      <View textAlign="center" padding={tokens.space.large}>
-        <Image
-          alt="Amplify logo"
-          src="https://docs.amplify.aws/assets/logo-dark.svg"
-        />
-      </View>
-    );
+    return <h1 className="border border-red-700 text-6xl">Header</h1>;
   },
 
   Footer() {
-    const { tokens } = useTheme();
-
-    return (
-      <View textAlign="center" padding={tokens.space.large}>
-        <Text color={tokens.colors.neutral[80]}>
-          &copy; All Rights Reserved
-        </Text>
-      </View>
-    );
+    return <footer className="border border-red-700 text-6xl">Footer</footer>;
   },
 
   SignIn: {
     Header() {
-      return <h1 className="font-bold">SignIn Heading</h1>;
+      return (
+        <h1 className="border border-green-700 text-2xl">SignIn Heading</h1>
+      );
     },
     Footer() {
-      const { toForgotPassword } = useAuthenticator();
+      const { toForgotPassword, toSignUp } = useAuthenticator((c) => [
+        c.toForgotPassword,
+      ]);
 
       return (
-        <View textAlign="center">
-          <Button
-            fontWeight="normal"
-            onClick={toForgotPassword}
-            size="small"
-            variation="link"
+        <footer
+          className="flex flex-col items-start border border-green-700
+            [&>button]:underline"
+        >
+          <p className="text-2xl">SignIn Footer</p>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              toForgotPassword();
+            }}
+            className="justify-self-start"
           >
-            Reset Password
-          </Button>
-        </View>
+            reset password
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              toSignUp();
+            }}
+          >
+            to sign up
+          </button>
+        </footer>
       );
     },
   },
 
   SignUp: {
     Header() {
-      const { tokens } = useTheme();
-
-      return (
-        <Heading
-          padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
-          level={3}
-        >
-          Create a new account
-        </Heading>
-      );
+      return <h1>SignUp Header</h1>;
     },
     Footer() {
       const { toSignIn } = useAuthenticator();
 
       return (
-        <View textAlign="center">
-          <Button
-            fontWeight="normal"
-            onClick={toSignIn}
-            size="small"
-            variation="link"
+        <footer>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              toSignIn();
+            }}
           >
             Back to Sign In
-          </Button>
-        </View>
+          </button>
+        </footer>
       );
     },
   },
@@ -177,19 +180,29 @@ const components: AuthenticatorProps["components"] = {
 const formFields: AuthenticatorProps["formFields"] = {
   signIn: {
     username: {
-      placeholder: "Enter your email",
+      label: "signIn username label",
+      placeholder: "signIn username placeholder",
+    },
+    password: {
+      label: "signIn password label",
+      placeholder: "signIn password placeholder",
+    },
+    custom: {
+      label: "signIn custom label",
+      placeholder: "signIn custom placeholder",
     },
   },
+
   signUp: {
     password: {
       label: "Password:",
       placeholder: "Enter your Password:",
       isRequired: false,
-      order: 2,
+      // order: 2,
     },
     confirm_password: {
       label: "Confirm Password:",
-      order: 1,
+      // order: 1,
     },
   },
   forceNewPassword: {
@@ -234,7 +247,12 @@ const formFields: AuthenticatorProps["formFields"] = {
 
 export default function Cognito() {
   return (
-    <Authenticator formFields={formFields} components={components} hideSignUp>
+    <Authenticator
+      formFields={formFields}
+      components={components}
+      hideSignUp={false}
+      initialState="signUp"
+    >
       {({ signOut }) => <button onClick={signOut}>Sign out</button>}
     </Authenticator>
   );
